@@ -1,0 +1,43 @@
+<!-- This component displays the RSVP statistics; rsvp-stats.component.html-->
+<div class="stats-container" *ngIf="(rsvpStats$ | async) as stats">
+  <h2>RSVP Statistics</h2>
+  
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-value">{{ stats.total }}</div>
+      <div class="stat-label">Total Responses</div>
+    </div>
+    
+    <div class="stat-item confirmed">
+      <div class="stat-value">{{ stats.confirmed }}</div>
+      <div class="stat-label">Confirmed</div>
+    </div>
+    
+    <div class="stat-item declined">
+      <div class="stat-value">{{ stats.declined }}</div>
+      <div class="stat-label">Declined</div>
+    </div>
+    
+    <div class="stat-item maybe">
+      <div class="stat-value">{{ stats.maybe }}</div>
+      <div class="stat-label">Maybe</div>
+    </div>
+  </div>
+  
+  <div class="attendee-summary" *ngIf="stats.confirmed > 0">
+    <div class="summary-item">
+      <span class="label">Confirmed Players:</span>
+      <span class="value">{{ stats.confirmed }}</span>
+    </div>
+    
+    <div class="summary-item" *ngIf="stats.totalGuests > 0">
+      <span class="label">Additional Guests:</span>
+      <span class="value">{{ stats.totalGuests }}</span>
+    </div>
+    
+    <div class="summary-item total">
+      <span class="label">Total Attendees:</span>
+      <span class="value">{{ stats.totalAttendees }}</span>
+    </div>
+  </div>
+</div> 

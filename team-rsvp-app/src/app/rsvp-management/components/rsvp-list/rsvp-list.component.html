@@ -1,0 +1,122 @@
+<!-- This component displays the RSVP Lists Form; rsvp-list.component.html-->
+<div class="rsvp-list-container">
+  <h2>RSVP List</h2>
+  
+  <div class="list-instructions">
+    <p>Add multiple RSVP entries using the form below. Click "Add Entry" to add more entries.</p>
+  </div>
+
+  <div class="dynamic-list">
+    <div class="list-header">
+      <div class="header-cell">Name</div>
+      <div class="header-cell">Email</div>
+      <div class="header-cell">Status</div>
+      <div class="header-cell">Additional Guests (excluding yourself)</div>
+      <div class="header-cell">Additional Notes</div>
+      <div class="header-cell actions">Actions</div>
+    </div>
+
+    <div class="list-row" *ngFor="let entry of entries; let i = index" [class.duplicate-error]="entry.isDuplicate">
+      <div class="list-cell">
+        <input 
+          type="text" 
+          [(ngModel)]="entry.name" 
+          class="form-control" 
+          placeholder="Full Name"
+          required
+          (ngModelChange)="onEntryChange()"
+          [class.is-invalid]="entry.isDuplicate"
+        >
+      </div>
+      
+      <div class="list-cell">
+        <input 
+          type="email" 
+          [(ngModel)]="entry.email" 
+          class="form-control" 
+          placeholder="Email"
+          required
+          (ngModelChange)="onEntryChange()"
+          [class.is-invalid]="entry.isDuplicate"
+        >
+        <div *ngIf="entry.isDuplicate" class="invalid-feedback">
+          This combination of name and email already exists
+        </div>
+      </div>
+      
+      <div class="list-cell">
+        <select [(ngModel)]="entry.status" class="form-control" required (ngModelChange)="onStatusChange(entry)">
+          <option value="" disabled selected>Select Status</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Maybe">Maybe</option>
+        </select>
+      </div>
+      
+      <div class="list-cell">
+        <input 
+          type="number" 
+          [(ngModel)]="entry.guestCount" 
+          class="form-control" 
+          min="0"
+          [disabled]="entry.status !== 'Yes'"
+          placeholder="{{ entry.status === 'Yes' ? 'Number of guests' : 'Only available for Yes' }}"
+        >
+      </div>
+      
+      <div class="list-cell">
+        <input 
+          type="text" 
+          [(ngModel)]="entry.notes" 
+          class="form-control" 
+          placeholder="Additional notes"
+        >
+      </div>
+      
+      <div class="list-cell actions">
+        <button 
+          type="button" 
+          class="btn btn-danger" 
+          (click)="removeEntry(i)"
+          [disabled]="entries.length === 1"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button 
+      type="button" 
+      class="btn btn-secondary" 
+      (click)="addNewEntry()"
+    >
+      Add Entry
+    </button>
+    
+    <button 
+      type="button" 
+      class="btn btn-primary" 
+      (click)="submitRsvpList()" 
+      [disabled]="processing || entries.length === 0"
+    >
+      <span *ngIf="!processing">Submit List</span>
+      <span *ngIf="processing">Processing...</span>
+    </button>
+    
+    <button 
+      type="button" 
+      class="btn btn-secondary" 
+      (click)="clearEntries()" 
+      [disabled]="processing || entries.length === 1 && !entries[0].name && !entries[0].email"
+    >
+      Clear All
+    </button>
+  </div>
+
+  <div *ngIf="submitResult" class="submit-result" [ngClass]="{'success': submitResult.success, 'error': !submitResult.success}">
+    <h3>{{ submitResult.success ? 'Success!' : 'Error' }}</h3>
+    <p>{{ submitResult.message }}</p>
+  </div>
+</div> 

@@ -1,0 +1,57 @@
+<div class="rsvp-form-container">
+  <h2>RSVP Form</h2>
+  
+  <div *ngIf="success" class="success-message">
+    Thank you! Your RSVP has been recorded.
+    <button (click)="resetForm()" class="btn btn-outline">Submit another RSVP</button>
+  </div>
+  
+  <form [formGroup]="rsvpForm" (ngSubmit)="onSubmit()" *ngIf="!success">
+    <div class="form-group">
+      <label for="name">Player Name</label>
+      <input type="text" id="name" formControlName="name" class="form-control" 
+             [class.is-invalid]="submitted && rsvpForm.get('name')?.errors">
+      <div *ngIf="submitted && rsvpForm.get('name')?.errors" class="validation-error">
+        <div *ngIf="rsvpForm.get('name')?.errors?.['required']">Name is required</div>
+        <div *ngIf="rsvpForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" class="form-control"
+             [class.is-invalid]="submitted && rsvpForm.get('email')?.errors">
+      <div *ngIf="submitted && rsvpForm.get('email')?.errors" class="validation-error">
+        <div *ngIf="rsvpForm.get('email')?.errors?.['required']">Email is required</div>
+        <div *ngIf="rsvpForm.get('email')?.errors?.['email']">Please enter a valid email address</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="status">RSVP Status</label>
+      <select id="status" formControlName="status" class="form-control">
+        <option *ngFor="let status of rsvpStatuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+    
+    <div class="form-group" *ngIf="showGuestCountField()">
+      <label for="guestCount">Number of Guests</label>
+      <input type="number" id="guestCount" formControlName="guestCount" class="form-control" 
+             min="0" max="10" 
+             [class.is-invalid]="submitted && rsvpForm.get('guestCount')?.errors">
+      <div *ngIf="submitted && rsvpForm.get('guestCount')?.errors" class="validation-error">
+        <div *ngIf="rsvpForm.get('guestCount')?.errors?.['min']">Guest count cannot be negative</div>
+        <div *ngIf="rsvpForm.get('guestCount')?.errors?.['max']">Maximum 10 guests allowed</div>
+      </div>
+      <small class="form-text text-muted">Not including yourself</small>
+    </div>
+    
+    <div class="form-group">
+      <label for="notes">Notes</label>
+      <textarea id="notes" formControlName="notes" class="form-control" 
+                placeholder="Any dietary restrictions or other information?"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit RSVP</button>
+  </form>
+</div> 

@@ -1,0 +1,68 @@
+<div class="attendee-list-container">
+  <h2>All RSVPs</h2>
+  
+  <ng-container *ngIf="(allRsvps$ | async) as rsvps">
+    <p *ngIf="rsvps.length === 0" class="no-attendees-message">
+      No RSVP responses yet
+    </p>
+    
+    <ul *ngIf="rsvps.length > 0" class="rsvps-list">
+      <li *ngFor="let rsvp of rsvps" class="rsvp-item" [ngClass]="getStatusClass(rsvp.status)">
+        <div class="rsvp-header">
+          <div class="player-info">
+            <span class="player-name">{{ rsvp.player.name }}</span>
+            <span class="player-email">{{ rsvp.player.email }}</span>
+          </div>
+          
+          <div class="rsvp-status">
+            <span class="status-badge">{{ rsvp.status }}</span>
+            <span class="response-date">{{ rsvp.responseDate | date:'MMM d, y, h:mm a' }}</span>
+          </div>
+        </div>
+        
+        <div *ngIf="rsvp.status === 'Yes' && rsvp.guestCount && rsvp.guestCount > 0" class="guest-info">
+          <span class="guest-count">Bringing {{ rsvp.guestCount }} additional {{ rsvp.guestCount === 1 ? 'guest' : 'guests' }}</span>
+        </div>
+        
+        <div *ngIf="rsvp.notes" class="rsvp-notes">
+          {{ rsvp.notes }}
+        </div>
+        
+        <!-- Edit mode -->
+        <div *ngIf="editingPlayerId === rsvp.player.id" class="edit-form">
+          <form [formGroup]="rsvpEditForm" (ngSubmit)="saveRsvp(rsvp)">
+            <div class="form-row">
+              <label for="status">Status:</label>
+              <select id="status" formControlName="status" class="form-control">
+                <option *ngFor="let status of rsvpStatuses" [value]="status">{{ status }}</option>
+              </select>
+            </div>
+            
+            <div class="form-row" *ngIf="rsvpEditForm.get('status')?.value === 'Yes'">
+              <label for="guestCount">Number of Guests:</label>
+              <input type="number" id="guestCount" formControlName="guestCount" class="form-control" 
+                    min="0" max="10">
+              <small class="form-text text-muted">Not including the player</small>
+            </div>
+            
+            <div class="form-row">
+              <label for="notes">Notes:</label>
+              <textarea id="notes" formControlName="notes" class="form-control" 
+                       placeholder="Any additional notes"></textarea>
+            </div>
+            
+            <div class="edit-actions">
+              <button type="submit" class="btn btn-save">Save</button>
+              <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Actions -->
+        <div *ngIf="editingPlayerId !== rsvp.player.id" class="rsvp-actions">
+          <button class="btn btn-edit" (click)="startEdit(rsvp)">Edit</button>
+        </div>
+      </li>
+    </ul>
+  </ng-container>
+</div> 

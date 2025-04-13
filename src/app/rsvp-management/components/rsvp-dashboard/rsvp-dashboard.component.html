@@ -1,0 +1,38 @@
+<div class="rsvp-dashboard">
+  <h1>Team RSVP Manager</h1>
+  
+  <div class="tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'single'"
+      (click)="setActiveTab('single')"
+    >
+      Individual RSVP
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'bulk'"
+      (click)="setActiveTab('bulk')"
+    >
+      Bulk Upload
+    </button>
+  </div>
+  
+  <div class="dashboard-grid" *ngIf="activeTab === 'single'">
+    <div class="form-section">
+      <app-rsvp-form></app-rsvp-form>
+    </div>
+    
+    <div class="stats-section">
+      <app-rsvp-stats></app-rsvp-stats>
+    </div>
+    
+    <div class="attendees-section">
+      <app-attendee-list></app-attendee-list>
+    </div>
+  </div>
+  
+  <div class="bulk-upload-section" *ngIf="activeTab === 'bulk'">
+    <app-rsvp-bulk-upload></app-rsvp-bulk-upload>
+  </div>
+</div> 

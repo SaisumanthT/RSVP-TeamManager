@@ -1,0 +1,41 @@
+<!-- This component displays the RSVP dashboard - tabs switcher; rsvp-dashboard.component.html-->
+<div class="rsvp-dashboard">
+  <div class="header">
+    <h1>Team RSVP Manager</h1>
+  </div>
+  
+  <div class="tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'single'"
+      (click)="setActiveTab('single')"
+    >
+      Individual RSVP
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'list'"
+      (click)="setActiveTab('list')"
+    >
+      RSVP List
+    </button>
+  </div>
+  
+  <div class="dashboard-grid" *ngIf="activeTab === 'single'">
+    <div class="form-section">
+      <app-rsvp-form></app-rsvp-form>
+    </div>
+    
+    <div class="stats-section">
+      <app-rsvp-stats></app-rsvp-stats>
+    </div>
+    
+    <div class="attendees-section">
+      <app-attendee-list></app-attendee-list>
+    </div>
+  </div>
+  
+  <div class="list-section" *ngIf="activeTab === 'list'">
+    <app-rsvp-list></app-rsvp-list>
+  </div>
+</div> 
